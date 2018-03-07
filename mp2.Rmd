@@ -14,7 +14,8 @@ load("candidates.rda")
 load("committees.rda")
 load("contributions.rda")
 ```
-
+ 
+ hi.
 
 ```{r}
 candidates_test <- candidates %>%
@@ -26,3 +27,5 @@ link_test <- candidates_test %>%
 Republicans <- link_test %>%
   filter(cand_party_affiliation == "REP")
 ```
+
+
