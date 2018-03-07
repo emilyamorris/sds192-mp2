@@ -15,4 +15,3 @@ load("committees.rda")
 load("contributions.rda")
 ```
 
-### OK what are we doing
