@@ -15,3 +15,11 @@ load("committees.rda")
 load("contributions.rda")
 ```
 
+
+```{r}
+candidates_test <- candidates %>%
+  select(cand_id:cand_office)
+
+link_test <- candidates_test %>%
+  left_join(contributions, by = "cand_id")
+```
