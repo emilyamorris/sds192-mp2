@@ -26,3 +26,15 @@ link_test <- candidates_test %>%
 Republicans <- link_test %>%
   filter(cand_party_affiliation == "REP")
 ```
+
+```{r}
+total_contribution <- function(name_arg) {
+  Republicans%>%
+    filter(cand_id== name_arg)%>%
+    group_by(year)%>%
+    summarise(numb_contributions= n(),
+              total_contribution = sum(transaction_amt))}
+```
+```{r}
+```
+}
