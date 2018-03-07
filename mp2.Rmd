@@ -22,4 +22,7 @@ candidates_test <- candidates %>%
 
 link_test <- candidates_test %>%
   left_join(contributions, by = "cand_id")
+
+Republicans <- link_test %>%
+  filter(cand_party_affiliation == "REP")
 ```
