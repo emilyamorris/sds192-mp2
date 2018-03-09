@@ -75,8 +75,20 @@ H_candidates_2012 %>%
 ```{r}
 elections <- house_elections%>%
   group_by(state) %>%
-  summarise(sum(general_votes))
+  summarise(votes=sum(general_votes))
 
 committees_contrabutions <- committees%>%
  full_join(contributions, by = "cmte_id")
+contrabutions_by_state<-committees_contrabutions %>%
+  group_by(state) %>%
+  summarise(transaction=sum(transaction_amt))  
+
+ Hi<- elections%>%
+ full_join(contrabutions_by_state, by = "state")
+
+
 ```
+
+
+
+
