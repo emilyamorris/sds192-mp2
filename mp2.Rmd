@@ -4,7 +4,16 @@ author: "Sylvie, Julia and Emily"
 date: "March 7, 2018"
 output: html_document
 ---
-
+```{r setup, include=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(ggplot2)
+library(ggthemes)
+library(RColorBrewer)
+library(Stat2Data)
+library(extrafont)
+font_import()
+```
 
 ## Loading the data
 
@@ -33,3 +42,13 @@ Democrats<- link_test %>%
 ```
 
 
+```{r}
+H_candidates<- candidates %>%
+  filter(cand_office == "H",cand_election_yr==2012) %>%
+  rename("candidate_name"="cand_name")
+```
+
+```{r}
+H_candidates %>%
+ full_join(house_elections, by = "candidate_name" ) 
+```
