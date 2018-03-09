@@ -19,7 +19,7 @@ load("contributions.rda")
 
 ```{r}
 candidates_test <- candidates %>%
-  select(cand_id:cand_office)
+  select(cand_id, cand_office)
 
 link_test <- candidates_test %>%
   left_join(contributions, by = "cand_id")
@@ -29,6 +29,7 @@ Republicans <- link_test %>%
 
 Democrats<- link_test %>%
   filter(cand_party_affiliation == "DEM")
+?candidates
 ```
 
 
