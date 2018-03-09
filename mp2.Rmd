@@ -2,7 +2,9 @@
 title: "Mini-Project 2"
 author: "Sylvie, Julia and Emily"
 date: "March 7, 2018"
-output: html_document
+output: 
+  html_document:
+    code_folding: show
 ---
 ```{r setup, include=FALSE, message=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
@@ -39,7 +41,7 @@ link_test <- candidates_test %>%
 
 Republicans <- link_test %>%
   filter(cand_party_affiliation == "REP")
-<<<<<<< HEAD
+
 ```
 
 ```{r}
@@ -50,14 +52,11 @@ total_contribution <- function(name_arg) {
     summarise(numb_contributions= n(),
               total_contribution = sum(transaction_amt))}
 ```
-```{r}
-```
-}
-=======
 
-Democrats<- link_test %>%
+```{r}
+Democrats <- link_test %>%
   filter(cand_party_affiliation == "DEM")
-?candidates
+
 ```
 
 
@@ -65,7 +64,7 @@ Democrats<- link_test %>%
 H_candidates_2012<- candidates %>%
   filter(cand_office == "H",cand_election_yr==2012) %>%
   rename("candidate_name" = "cand_name") %>%
-  rename("fec_id" = "cand_id")
+  rename("fec_id" = "cand_id") %>%
 ```
 
 ```{r}
@@ -78,8 +77,6 @@ elections <- house_elections%>%
   group_by(state) %>%
   summarise(sum(general_votes))
 
-
+committees_contrabutions <- committees%>%
+ full_join(contributions, by = "cmte_id")
 ```
-
-
->>>>>>> 2b55760b7668fa94dfb7636249c2411856e576ce
