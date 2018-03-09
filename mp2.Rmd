@@ -26,3 +26,13 @@ load("candidates.rda")
 load("committees.rda")
 load("contributions.rda")
 ```
+
+```{r}
+Republicans <- contributions %>%
+  left_join(candidates, by= "cand_id")%>%
+  filter(cand_party_affiliation=="REP", transaction_amt>0)%>%
+  group_by(state)%>%
+  summarise(total_contributions= sum(transaction_amt),
+            average_contributions= mean(transaction_amt))
+```
+  
