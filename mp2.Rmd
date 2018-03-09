@@ -10,9 +10,13 @@ library(tidyverse)
 library(ggplot2)
 library(ggthemes)
 library(RColorBrewer)
-library(Stat2Data)
 library(extrafont)
-font_import()
+#install.packages("ggmap")
+library(ggmap)
+library(maps)
+library(mapdata)
+library(mosaic)
+library(dplyr)
 ```
 
 ## Loading the data
@@ -28,7 +32,7 @@ load("contributions.rda")
 
 ```{r}
 candidates_test <- candidates %>%
-  select(cand_id, cand_office)
+  select(c(cand_id, cand_office, cand_party_affiliation))
 
 link_test <- candidates_test %>%
   left_join(contributions, by = "cand_id")
@@ -43,12 +47,22 @@ Democrats<- link_test %>%
 
 
 ```{r}
-H_candidates<- candidates %>%
+H_candidates_2012<- candidates %>%
   filter(cand_office == "H",cand_election_yr==2012) %>%
   rename("candidate_name"="cand_name")
 ```
 
 ```{r}
-H_candidates %>%
+H_candidates_2012 %>%
  full_join(house_elections, by = "candidate_name" ) 
 ```
+
+```{r}
+elections <- house_elections%>%
+  group_by(state) %>%
+  summarise(sum(general_votes))
+
+
+```
+
+
