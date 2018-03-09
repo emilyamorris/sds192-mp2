@@ -19,7 +19,6 @@ library(mosaic)
 library(dplyr)
 ```
 
-## Loading the data
 
 ```{r, include=FALSE}
 load("house_elections.rda")
@@ -27,59 +26,3 @@ load("candidates.rda")
 load("committees.rda")
 load("contributions.rda")
 ```
- 
-
-
-```{r}
-candidates_test <- candidates %>%
-  select(c(cand_id, cand_office, cand_party_affiliation))
-
-link_test <- candidates_test %>%
-  left_join(contributions, by = "cand_id")
-
-Republicans <- link_test %>%
-  filter(cand_party_affiliation == "REP")
-<<<<<<< HEAD
-```
-
-```{r}
-total_contribution <- function(name_arg) {
-  Republicans%>%
-    filter(cand_id== name_arg)%>%
-    group_by(year)%>%
-    summarise(numb_contributions= n(),
-              total_contribution = sum(transaction_amt))}
-```
-```{r}
-```
-}
-=======
-
-Democrats<- link_test %>%
-  filter(cand_party_affiliation == "DEM")
-?candidates
-```
-
-
-```{r}
-H_candidates_2012<- candidates %>%
-  filter(cand_office == "H",cand_election_yr==2012) %>%
-  rename("candidate_name" = "cand_name") %>%
-  rename("fec_id" = "cand_id")
-```
-
-```{r}
-H_candidates_2012 %>%
- full_join(house_elections, by = "fec_id") 
-```
-
-```{r}
-elections <- house_elections%>%
-  group_by(state) %>%
-  summarise(sum(general_votes))
-
-
-```
-
-
->>>>>>> 2b55760b7668fa94dfb7636249c2411856e576ce
