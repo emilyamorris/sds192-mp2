@@ -49,12 +49,13 @@ Democrats<- link_test %>%
 ```{r}
 H_candidates_2012<- candidates %>%
   filter(cand_office == "H",cand_election_yr==2012) %>%
-  rename("candidate_name"="cand_name")
+  rename("candidate_name" = "cand_name") %>%
+  rename("fec_id" = "cand_id")
 ```
 
 ```{r}
 H_candidates_2012 %>%
- full_join(house_elections, by = "candidate_name" ) 
+ full_join(house_elections, by = "fec_id") 
 ```
 
 ```{r}
