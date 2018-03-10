@@ -61,6 +61,7 @@ Democrats <- link_test %>%
 
 ```{r}
 H_candidates_2012<- candidates %>%
+  filter(cand_party_affiliation =="REP" | cand_party_affiliation == "DEM")%>%
   filter(cand_office == "H",cand_election_yr==2012) %>%
   rename("candidate_name" = "cand_name") %>%
   rename("fec_id" = "cand_id") %>%
@@ -74,7 +75,7 @@ H_candidates_2012 %>%
 
 ```{r}
 elections <- house_elections%>%
-  group_by(state) %>%
+  group_by(state, party) %>%
   summarise(votes=sum(general_votes))
 
 committees_contrabutions <- committees%>%
@@ -83,7 +84,7 @@ contrabutions_by_state<-committees_contrabutions %>%
   group_by(state) %>%
   summarise(transaction=sum(transaction_amt))  
 
- Hi <- elections%>%
+ contrabutions_votes <- elections%>%
  full_join(contrabutions_by_state, by = "state")
 
 
