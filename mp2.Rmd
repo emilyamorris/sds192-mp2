@@ -81,12 +81,7 @@ elections <- house_elections%>%
   group_by(state) %>%
   summarise(gen_total=sum(general_votes),runoff_total=sum(runoff_votes), primary_total = sum(primary_votes))
 
- total_votes<- elections%>%
-    group_by(state) %>%
-    summarise(votes = (runoff_total + gen_total + primary_total)) 
-  
-elections %>%
-   full_join(total_votes, by = "state")
+
 
 committees_contrabutions <- committees%>%
  full_join(contributions, by = "cmte_id")
