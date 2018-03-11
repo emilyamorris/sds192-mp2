@@ -61,22 +61,32 @@ Democrats <- link_test %>%
 
 ```{r}
 H_candidates_2012<- candidates %>%
-  filter(cand_party_affiliation =="REP" | cand_party_affiliation == "DEM")%>%
   filter(cand_office == "H",cand_election_yr==2012) %>%
   rename("candidate_name" = "cand_name") %>%
-  rename("fec_id" = "cand_id") %>%
+  rename("fec_id" = "cand_id") 
+ votes_2012<- house_elections%>%
+    group_by(fec_id)%>%
+   summarize(Total_primary = sum(primary_votes), Total_general = sum(general_votes))
 ```
 
 ```{r}
 H_candidates_2012 %>%
- full_join(house_elections, by = "fec_id") 
+ full_join(votes_2012, by = "fec_id")%>% 
+  rename("state" = "cand_state")
 ```
 
 
 ```{r}
 elections <- house_elections%>%
-  group_by(state, party) %>%
-  summarise(votes=sum(general_votes))
+  group_by(state) %>%
+  summarise(gen_total=sum(general_votes),runoff_total=sum(runoff_votes), primary_total = sum(primary_votes))
+
+ total_votes<- elections%>%
+    group_by(state) %>%
+    summarise(votes = (runoff_total + gen_total + primary_total)) 
+  
+elections %>%
+   full_join(total_votes, by = "state")
 
 committees_contrabutions <- committees%>%
  full_join(contributions, by = "cmte_id")
@@ -84,8 +94,22 @@ contrabutions_by_state<-committees_contrabutions %>%
   group_by(state) %>%
   summarise(transaction=sum(transaction_amt))  
 
- contrabutions_votes <- elections%>%
+contrabutions_votes <- elections%>%
  full_join(contrabutions_by_state, by = "state")
 
-
+ 
+ 
 ```
+
+
+```{r}
+cost <-contrabutions_votes %>%
+  group_by(state) %>%
+  summarise(votes = (runoff_total + gen_total + primary_total),cost_vote = transaction/votes)
+
+contrabutions_votes %>%
+ full_join(cost, by = "state")
+```
+
+
+
