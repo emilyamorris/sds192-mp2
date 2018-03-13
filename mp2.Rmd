@@ -115,25 +115,37 @@ state_district<-house_elections %>%
   summarise(gen_total=sum(general_votes),runoff_total=sum(runoff_votes), primary_total = sum(primary_votes))
 head(state_district, n=10)
 
-vote_precent<-house_elections %>%
+vote_percent<-house_elections %>%
  merge(state_district, by = c("state","district")) %>%
   group_by(fec_id)%>%
 mutate(ratio=(general_votes/gen_total), percent = (general_votes/gen_total)*100) 
 winners<-vote_precent %>% 
   filter(ge_winner=="W")
+general_election <- vote_percent %>%
+  filter(percent > 1.5)
+
+parties <- house_elections %>%
+  group_by(party) %>%
+  summarise(total_votes=sum(general_votes))
+
+parties
 ```
 
 
 {This function helps you pick out certain rows, it tells you the election results based on district and state}
 ```{r}
 winner_2012<-function(state_arg,district_arg){
-vote_precent %>%
+general_election %>%
     filter(state == state_arg, district == district_arg)%>%
     group_by(fec_id, general_votes, state, district, candidate_name, gen_total, party,incumbent)%>%
     summarise(percent = (general_votes/gen_total)*100)}
 
   bar_chart<-function(data_arg){print(ggplot(data_arg)+
- geom_bar(aes(x=candidate_name,y=general_votes, fill=party), stat="identity"))}
+ geom_bar(aes(x=candidate_name,y=general_votes, fill=party), stat="identity")+ 
+  scale_fill_manual(values = c("D" = "darkblue", "R" = "red")))}
+
+#example:
+bar_chart(winner_2012("CA","18")) 
 
 
 ```
