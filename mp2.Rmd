@@ -12,12 +12,12 @@ library(tidyverse)
 library(ggplot2)
 library(ggthemes)
 library(RColorBrewer)
-library(extrafont)
+#library(extrafont)
 #install.packages("ggmap")
-library(ggmap)
-library(maps)
-library(mapdata)
-library(mosaic)
+#library(ggmap)
+#library(maps)
+#library(mapdata)
+#library(mosaic)
 library(dplyr)
 ```
 
@@ -28,10 +28,8 @@ load("house_elections.rda")
 load("candidates.rda")
 load("committees.rda")
 load("contributions.rda")
-load("individuals.rda")
+#load("individuals.rda")
 ```
- 
-
 
 ```{r,message=FALSE, warning=FALSE}
 candidates_test <- candidates %>%
@@ -61,23 +59,6 @@ Democrats <- link_test %>%
 
 
 ```{r,message=FALSE, warning=FALSE}
-H_candidates_2012<- candidates %>%
-  filter(cand_office == "H",cand_election_yr==2012) %>%
-  rename("candidate_name" = "cand_name") %>%
-  rename("fec_id" = "cand_id") 
- votes_2012<- house_elections%>%
-    group_by(fec_id)%>%
-   summarize(Total_primary = sum(primary_votes), Total_general = sum(general_votes))
-```
-
-```{r,message=FALSE, warning=FALSE}
-H_candidates_2012 %>%
- full_join(votes_2012, by = "fec_id")%>% 
-  rename("state" = "cand_state")
-```
-
-
-```{r,message=FALSE, warning=FALSE}
 elections <- house_elections%>%
   group_by(state) %>%
   summarise(gen_total=sum(general_votes),runoff_total=sum(runoff_votes), primary_total = sum(primary_votes))
@@ -86,12 +67,6 @@ elections <- house_elections%>%
 
 committees_contributions <- committees%>%
  full_join(contributions, by = "cmte_id")
-contrabutions_by_state<-committees_contrabutions %>%
-  group_by(state) %>%
-  summarise(transaction=sum(transaction_amt))  
-
-contributions_votes <- elections%>%
- full_join(contrabutions_by_state, by = "state")
 
  
  
@@ -118,51 +93,64 @@ head(state_district, n=10)
 
 vote_percent<-house_elections %>%
  merge(state_district, by = c("state","district")) %>%
-  group_by(fec_id)%>%
-mutate(ratio=(general_votes/gen_total), percent = (general_votes/gen_total)*100) 
-winners<-vote_percent %>% 
-  filter(ge_winner=="W")
-general_election <- vote_percent %>%
-  filter(percent > 1.5)
+  group_by(fec_id,ge_winner)%>%
+summarise(ratio=(general_votes/gen_total), percent = (general_votes/gen_total)*100) 
 
-parties <- house_elections %>%
-  group_by(party) %>%
-  summarise(total_votes=sum(general_votes))
-
-parties
-```
-
-
-{This function helps you pick out certain rows, it tells you the election results based on district and state}
-```{r,message=FALSE, warning=FALSE}
-winner_2012<-function(state_arg,district_arg){
-general_election %>%
-    filter(state == state_arg, district == district_arg)%>%
-    group_by(fec_id, general_votes, state, district, candidate_name, gen_total, party,incumbent)%>%
-    summarise(percent = (general_votes/gen_total)*100)}
-
-  bar_chart<-function(data_arg){print(ggplot(data_arg)+
- geom_bar(aes(x=candidate_name,y=general_votes, fill=party), stat="identity")+ 
-  scale_fill_manual(values = c("D" = "darkblue", "R" = "red")))}
-
-#example:
-bar_chart(winner_2012("PA","18")) 
 
 
 ```
 
-
-
 ```{r,message=FALSE, warning=FALSE}
+ 
+  H_candidates_2012 <- candidates %>%
+  filter(cand_office == "H",cand_election_yr==2012) %>%
+  rename("candidate_name" = "cand_name") %>%
+  rename("fec_id" = "cand_id")
 
-committees_contributions <- committees%>%
+ percent_votes<-H_candidates_2012 %>%
+ left_join(house_elections, by = "fec_id")%>%
+   group_by(fec_id) %>%
+summarize(Total_primary = sum(primary_votes), Total_general = sum(general_votes)) 
+
+candidates_2012 <- candidates %>%
+  filter(cand_office == "H",cand_election_yr==2012) %>%
+  rename("candidate_name" = "cand_name") %>%
+  rename("fec_id" = "cand_id") %>%
+ full_join(percent_votes, by = "fec_id") 
+
+candidates_2012_house<-candidates_2012%>%
+  full_join(vote_percent, by = "fec_id")
+
+
+committees_contributions <- committees %>%
  full_join(contributions, by = "cmte_id")%>%
   rename( "fec_id" ="cand_id.y")
 
+candidates_2012_house %>%
+  left_join(committees_contributions, by = "fec_id") %>%
+  group_by(candidate_name,cand_party_affiliation,cand_city,cand_office_district, fec_id, state, Total_primary, Total_general,percent, total= Total_primary + Total_general)%>%
+summarise(transction=sum(transaction_amt)) %>%
+filter(cand_party_affiliation == "DEM"|cand_party_affiliation == "REP") %>%
+filter(percent > 1.5)
+
+mp2_State<-function(state_a){
+ candidates_2012_house %>%
+    filter(state == state_a)}
+
+mp2_plot<- function(data_arg){print(ggplot(data_arg,aes(x = total, y = transaction))+
+  geom_point(aes(color = cand_party_affiliation , size = percent )) +
+   scale_color_manual(values = c("D" = "darkblue", "R" = "red")) + 
+    ggtitle(data_arg$state))}
 
 
 
 ```
+
+
+
+
+
+
 
 
 
