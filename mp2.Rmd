@@ -119,7 +119,7 @@ vote_percent<-house_elections %>%
  merge(state_district, by = c("state","district")) %>%
   group_by(fec_id)%>%
 mutate(ratio=(general_votes/gen_total), percent = (general_votes/gen_total)*100) 
-winners<-vote_precent %>% 
+winners<-vote_percent %>% 
   filter(ge_winner=="W")
 general_election <- vote_percent %>%
   filter(percent > 1.5)
