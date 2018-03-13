@@ -154,11 +154,17 @@ bar_chart(winner_2012("PA","18"))
 
 
 ```{r,message=FALSE, warning=FALSE}
-ggplot(data=vote_cost,aes(x=votes, y = transaction)) +
-  geom_point(aes(color=cost_vote))
+
+committees_contributions <- committees%>%
+ full_join(contributions, by = "cmte_id")%>%
+  rename( "fec_id" ="cand_id.y")
+
+
 
 
 ```
+
+
 
 
 
