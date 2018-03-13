@@ -23,16 +23,17 @@ library(dplyr)
 
 ## Loading the data
 
-```{r, include=FALSE}
+```{r, include=FALSE,message=FALSE}
 load("house_elections.rda")
 load("candidates.rda")
 load("committees.rda")
 load("contributions.rda")
+load("individuals.rda")
 ```
  
 
 
-```{r}
+```{r,message=FALSE, warning=FALSE}
 candidates_test <- candidates %>%
   select(c(cand_id, cand_office, cand_party_affiliation))
 
@@ -43,7 +44,7 @@ Republicans <- link_test %>%
   filter(cand_party_affiliation == "REP")
 ```
 
-```{r}
+```{r,message=FALSE, warning=FALSE}
 total_contribution <- function(name_arg) {
   Republicans%>%
     filter(cand_id== name_arg)%>%
@@ -52,14 +53,14 @@ total_contribution <- function(name_arg) {
               total_contribution = sum(transaction_amt))}
 ```
 
-```{r}
+```{r,message=FALSE, warning=FALSE}
 Democrats <- link_test %>%
   filter(cand_party_affiliation == "DEM")
 
 ```
 
 
-```{r}
+```{r,message=FALSE, warning=FALSE}
 H_candidates_2012<- candidates %>%
   filter(cand_office == "H",cand_election_yr==2012) %>%
   rename("candidate_name" = "cand_name") %>%
@@ -69,27 +70,27 @@ H_candidates_2012<- candidates %>%
    summarize(Total_primary = sum(primary_votes), Total_general = sum(general_votes))
 ```
 
-```{r}
+```{r,message=FALSE, warning=FALSE}
 H_candidates_2012 %>%
  full_join(votes_2012, by = "fec_id")%>% 
   rename("state" = "cand_state")
 ```
 
 
-```{r}
+```{r,message=FALSE, warning=FALSE}
 elections <- house_elections%>%
   group_by(state) %>%
   summarise(gen_total=sum(general_votes),runoff_total=sum(runoff_votes), primary_total = sum(primary_votes))
 
 
 
-committees_contrabutions <- committees%>%
+committees_contributions <- committees%>%
  full_join(contributions, by = "cmte_id")
 contrabutions_by_state<-committees_contrabutions %>%
   group_by(state) %>%
   summarise(transaction=sum(transaction_amt))  
 
-contrabutions_votes <- elections%>%
+contributions_votes <- elections%>%
  full_join(contrabutions_by_state, by = "state")
 
  
@@ -97,19 +98,19 @@ contrabutions_votes <- elections%>%
 ```
 
 
-```{r}
-cost <-contrabutions_votes %>%
+```{r,message=FALSE, warning=FALSE}
+cost <-contributions_votes %>%
   group_by(state) %>%
   summarise(votes = (runoff_total + gen_total + primary_total),cost_vote = transaction/votes)
 
-vote_cost<-contrabutions_votes %>%
+vote_cost<-contributions_votes %>%
  full_join(cost, by = "state")%>%
   group_by(cost_vote, state, transaction,votes)
 ```
 
 
 
-```{r}
+```{r,message=FALSE, warning=FALSE}
 state_district<-house_elections %>%
   group_by(state,district)%>%
   summarise(gen_total=sum(general_votes),runoff_total=sum(runoff_votes), primary_total = sum(primary_votes))
@@ -133,7 +134,7 @@ parties
 
 
 {This function helps you pick out certain rows, it tells you the election results based on district and state}
-```{r}
+```{r,message=FALSE, warning=FALSE}
 winner_2012<-function(state_arg,district_arg){
 general_election %>%
     filter(state == state_arg, district == district_arg)%>%
@@ -145,14 +146,14 @@ general_election %>%
   scale_fill_manual(values = c("D" = "darkblue", "R" = "red")))}
 
 #example:
-bar_chart(winner_2012("CA","18")) 
+bar_chart(winner_2012("PA","18")) 
 
 
 ```
 
 
 
-```{r}
+```{r,message=FALSE, warning=FALSE}
 ggplot(data=vote_cost,aes(x=votes, y = transaction)) +
   geom_point(aes(color=cost_vote))
 
