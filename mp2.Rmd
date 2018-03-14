@@ -12,7 +12,8 @@ library(tidyverse)
 library(ggplot2)
 library(ggthemes)
 library(RColorBrewer)
-#library(extrafont)
+library(extrafont)
+
 #install.packages("ggmap")
 #library(ggmap)
 #library(maps)
@@ -57,31 +58,6 @@ Democrats <- link_test %>%
 
 ```
 
-
-```{r,message=FALSE, warning=FALSE}
-elections <- house_elections%>%
-  group_by(state) %>%
-  summarise(gen_total=sum(general_votes),runoff_total=sum(runoff_votes), primary_total = sum(primary_votes))
-
-
-
-committees_contributions <- committees%>%
- full_join(contributions, by = "cmte_id")
-
- 
- 
-```
-
-
-```{r,message=FALSE, warning=FALSE}
-cost <-contributions_votes %>%
-  group_by(state) %>%
-  summarise(votes = (runoff_total + gen_total + primary_total),cost_vote = transaction/votes)
-
-vote_cost<-contributions_votes %>%
- full_join(cost, by = "state")%>%
-  group_by(cost_vote, state, transaction,votes)
-```
 
 
 
@@ -136,10 +112,10 @@ mutate(transaction=sum(transaction_amt)) %>%
 ```
 
 
-```{r}
+```{r,,message=FALSE, warning=FALSE}
 Data1<-contrabutions_candidates%>%
   group_by(cand_office_district, cand_office_state, transaction)%>%
-summarize(Total = sum(Total_general), D = sum(ifelse(cand_party_affiliation == "DEM", Total_general, 0)), R = sum(ifelse(cand_party_affiliation == "REP", Total_general , 0)), Prop_dem = ((100*D)/Total), Prop_R = ((100*R)/Total), Diff =  abs(Prop_dem - Prop_R/Total))%>%
+summarize(Total = sum(Total_general), D = sum(ifelse(cand_party_affiliation == "DEM", Total_general, 0)), R = sum(ifelse(cand_party_affiliation == "REP", Total_general , 0)), Prop_dem = ((100*D)/Total), Prop_R = ((100*R)/Total), margin = abs(Prop_dem - Prop_R/Total))%>%
 mutate(winning_party = ifelse((Prop_dem > 50), "D", "R"))
 
 Data2<-Data1%>%
@@ -151,15 +127,15 @@ Data3<-Data1%>%
 
 state_filter<-function(state_arg){Data3 %>%
     filter(cand_office_state == state_arg)}
-plot_filter<-function(data_a){print(ggplot(data=data_a, aes(x=transaction, y = Total)) + 
-  geom_point(aes(color = winning_party, size = Diff), alpha=0.35,shape = 21, color="black", stroke = 1.29, position=position_dodge(width=0.7)) +
+plot_filter<-function(data_a){print(ggplot(data=data_a, aes(x=transaction, y =Total )) + 
+  geom_point(aes(fill = winning_party, size = margin ), alpha=0.45, shape = 21, color="black", stroke = 1.29, position=position_dodge(width=0.7)) +
   geom_line(aes(y = data_a$fifty_line))+
-  scale_color_manual(values = c("D" = "darkblue", "R" = "red"),"Party that won the district") +
+  scale_fill_manual(values = c("D" = "darkblue", "R" = "red"),"Party that won the district") +
     ggtitle(data_a$cand_office_state)+
-    scale_y_continuous("Total Ballots cast")+
-  scale_x_continuous("Amount of money spent") +
-    scale_size_continuous("margin of victory")+
-    theme_fivethirtyeight())}
+    scale_y_continuous("Amount of Money Spent")+
+  scale_x_continuous("Total ballots cast") +
+    scale_size_continuous(range = c(1.925, 4.75),"Margin of Victoy")+
+    theme(axis.ticks.length = unit(4, "mm"), axis.ticks.y = element_blank()))}
      
 
 #example:
