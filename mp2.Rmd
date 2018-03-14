@@ -134,7 +134,7 @@ plot_filter<-function(data_a){print(ggplot(data=data_a, aes(x=transaction, y =To
     ggtitle(data_a$cand_office_state)+
     scale_y_continuous("Amount of Money Spent")+
   scale_x_continuous("Total ballots cast") +
-    scale_size_continuous(range = c(1.925, 4.75),"Margin of Victoy")+
+    scale_size_continuous(range = c(1.925, 4.75),"Margin of Victoy(%)")+
     theme(axis.ticks.length = unit(4, "mm"), axis.ticks.y = element_blank()))}
      
 
