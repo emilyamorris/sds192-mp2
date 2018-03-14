@@ -139,7 +139,7 @@ mutate(transaction=sum(transaction_amt)) %>%
 ```{r}
 Data1<-contrabutions_candidates%>%
   group_by(cand_office_district, cand_office_state, transaction)%>%
-summarize(Total = sum(Total_general), D = sum(ifelse(cand_party_affiliation == "DEM", Total_general, 0)), R = sum(ifelse(cand_party_affiliation == "REP", Total_general , 0)), Prop_dem = ((100*D)/Total), Prop_R = ((100*R)/Total), Diff = abs(D - R))%>%
+summarize(Total = sum(Total_general), D = sum(ifelse(cand_party_affiliation == "DEM", Total_general, 0)), R = sum(ifelse(cand_party_affiliation == "REP", Total_general , 0)), Prop_dem = ((100*D)/Total), Prop_R = ((100*R)/Total), Diff =  abs(Prop_dem - Prop_R/Total))%>%
 mutate(winning_party = ifelse((Prop_dem > 50), "D", "R"))
 
 Data2<-Data1%>%
@@ -152,13 +152,14 @@ Data3<-Data1%>%
 state_filter<-function(state_arg){Data3 %>%
     filter(cand_office_state == state_arg)}
 plot_filter<-function(data_a){print(ggplot(data=data_a, aes(x=transaction, y = Total)) + 
-  geom_point(aes(color = winning_party, size = Diff), alpha=0.5) +
+  geom_point(aes(color = winning_party, size = Diff), alpha=0.35,shape = 21, color="black", stroke = 1.29, position=position_dodge(width=0.7)) +
   geom_line(aes(y = data_a$fifty_line))+
   scale_color_manual(values = c("D" = "darkblue", "R" = "red"),"Party that won the district") +
     ggtitle(data_a$cand_office_state)+
     scale_y_continuous("Total Ballots cast")+
   scale_x_continuous("Amount of money spent") +
-    scale_size_continuous("margin of victory"))}
+    scale_size_continuous("margin of victory")+
+    theme_fivethirtyeight())}
      
 
 #example:
