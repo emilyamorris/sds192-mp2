@@ -13,13 +13,11 @@ library(ggthemes)
 library(RColorBrewer)
 library(extrafont)
 
-<<<<<<< HEAD
+
 #install.packages("gridExtra")
 library("gridExtra")
-=======
 #install.packages("ggpubr")
 library(ggpubr)
->>>>>>> b43997cb69111c51e3f2b93a5a19054e9dfc1b30
 library(dplyr)
 ```
 
@@ -30,45 +28,6 @@ load("committees.rda")
 load("contributions.rda")
 #load("individuals.rda")
 ```
-<<<<<<< HEAD
-
-```{r}
-Republicans <- contributions %>%
-  left_join(candidates, by= "cand_id")%>%
-  filter(cand_party_affiliation=="REP", transaction_amt>0)%>%
-  group_by(state)%>%
-  summarise(total_contributions= sum(transaction_amt),
-            average_contributions= mean(transaction_amt))
-```
-  
-=======
-
-```{r,message=FALSE, warning=FALSE}
-candidates_test <- candidates %>%
-  select(c(cand_id, cand_office, cand_party_affiliation))
-
-link_test <- candidates_test %>%
-  left_join(contributions, by = "cand_id")
-
-Republicans <- link_test %>%
-  filter(cand_party_affiliation == "REP")
-```
-
-```{r,message=FALSE, warning=FALSE}
-total_contribution <- function(name_arg) {
-  Republicans%>%
-    filter(cand_id== name_arg)%>%
-    group_by(year)%>%
-    summarise(numb_contributions= n(),
-              total_contribution = sum(transaction_amt))}
-```
-
-```{r,message=FALSE, warning=FALSE}
-Democrats <- link_test %>%
-  filter(cand_party_affiliation == "DEM")
-
-```
-
 
 
 
@@ -174,6 +133,5 @@ lapply(lapply(Data1$cand_office_state,state_filter), plot_filter)
 
 
 
->>>>>>> ca0125ed890a7314dadf03961f013999bd2a8177
 
 
