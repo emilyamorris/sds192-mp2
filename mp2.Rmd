@@ -49,7 +49,7 @@ vote_percent<-house_elections %>%
 
 ```{r,message=FALSE, warning=FALSE}
  
-  H_candidates_2012 <- candidates %>%
+H_candidates_2012 <- candidates %>%
   filter(cand_office == "H",cand_election_yr==2012) %>%
   rename("candidate_name" = "cand_name") %>%
   rename("fec_id" = "cand_id")
@@ -101,7 +101,7 @@ Data3<-Data1%>%
   full_join(Data2, by= "cand_office_state")
 
 
-state_filter<-function(state_arg){Data3 %>%
+state_filter <-function(state_arg){Data3 %>%
     filter(cand_office_state == state_arg)}
 plot_filter<-function(data_a){print(ggplot(data=data_a, aes(x=transaction, y =Total )) + 
   geom_point(aes(fill = winning_party, size = margin ), alpha=0.45, shape = 21, color="black", stroke = 1.29, position=position_dodge(width=0.7)) +
@@ -122,13 +122,7 @@ plot_filter(state_filter("NJ"))
 #plotting all states: 
 lapply(lapply(Data1$cand_office_state,state_filter), plot_filter)
   
-
 ```
-
-
-
-
-
 
 
 
