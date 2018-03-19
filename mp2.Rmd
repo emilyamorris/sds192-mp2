@@ -124,6 +124,25 @@ lapply(lapply(Data1$cand_office_state,state_filter), plot_filter)
   
 ```
 
+```{r}
+house_winners_incumbents <- house_elections %>%
+  filter(ge_winner== "W", incumbent== "TRUE") %>%
+  group_by(state, party)%>%
+  summarise(total_winnners_per_state= n())%>%
+  spread(party, -state)%>%
+  select(state, D, R)%>%
+  rename("Incumbent_Dems"= D, "Incumbent_Reps"=R)
 
+house_winners_challengers <- house_elections %>%
+  filter(ge_winner == "W", incumbent == "FALSE")%>%
+  group_by(state, party)%>%
+  summarise(total_winners_per_state= n())%>%
+  spread(party, -state)%>%
+  select(state, D, R)%>%
+  rename("Challenger_Dems"= D, "Challenger_Reps"= R)
 
+house_winners_all <- house_winners_incumbents %>%
+  full_join(house_winners_challengers)
+  
+```
 
