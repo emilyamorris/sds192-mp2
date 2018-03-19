@@ -5,27 +5,25 @@ date: "March 7, 2018"
 output: html_document
 ---
 ```{r setup, include=FALSE, message=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 library(ggplot2)
 library(ggthemes)
 library(RColorBrewer)
 library(extrafont)
-#install.packages("ggmap")
-library(ggmap)
-library(maps)
-library(mapdata)
-library(mosaic)
+
+#install.packages("ggpubr")
+library(ggpubr)
 library(dplyr)
 ```
 
-
-```{r, include=FALSE}
+```{r, include=FALSE,message=FALSE}
 load("house_elections.rda")
 load("candidates.rda")
 load("committees.rda")
 load("contributions.rda")
+#load("individuals.rda")
 ```
+<<<<<<< HEAD
 
 ```{r}
 Republicans <- contributions %>%
@@ -36,3 +34,139 @@ Republicans <- contributions %>%
             average_contributions= mean(transaction_amt))
 ```
   
+=======
+
+```{r,message=FALSE, warning=FALSE}
+candidates_test <- candidates %>%
+  select(c(cand_id, cand_office, cand_party_affiliation))
+
+link_test <- candidates_test %>%
+  left_join(contributions, by = "cand_id")
+
+Republicans <- link_test %>%
+  filter(cand_party_affiliation == "REP")
+```
+
+```{r,message=FALSE, warning=FALSE}
+total_contribution <- function(name_arg) {
+  Republicans%>%
+    filter(cand_id== name_arg)%>%
+    group_by(year)%>%
+    summarise(numb_contributions= n(),
+              total_contribution = sum(transaction_amt))}
+```
+
+```{r,message=FALSE, warning=FALSE}
+Democrats <- link_test %>%
+  filter(cand_party_affiliation == "DEM")
+
+```
+
+
+
+
+```{r,message=FALSE, warning=FALSE}
+state_district<-house_elections %>%
+  group_by(state,district)%>%
+  summarise(gen_total=sum(general_votes),
+            runoff_total=sum(runoff_votes), 
+            primary_total = sum(primary_votes))
+head(state_district, n=10)
+
+vote_percent<-house_elections %>%
+ merge(state_district, by = c("state","district")) %>%
+  group_by(fec_id,ge_winner)%>%
+  summarise(ratio=(general_votes/gen_total), 
+            percent = (general_votes/gen_total)*100) 
+
+
+
+```
+
+```{r,message=FALSE, warning=FALSE}
+ 
+  H_candidates_2012 <- candidates %>%
+  filter(cand_office == "H",cand_election_yr==2012) %>%
+  rename("candidate_name" = "cand_name") %>%
+  rename("fec_id" = "cand_id")
+
+ percent_votes<-H_candidates_2012 %>%
+ left_join(house_elections, by = "fec_id")%>%
+   group_by(fec_id) %>%
+summarize(Total_primary = sum(primary_votes), Total_general = sum(general_votes), total= Total_primary + Total_general)
+
+candidates_2012 <- candidates %>%
+  filter(cand_office == "H",cand_election_yr==2012) %>%
+  rename("candidate_name" = "cand_name") %>%
+  rename("fec_id" = "cand_id") %>%
+ full_join(percent_votes, by = "fec_id") 
+
+candidates_2012_house<-candidates_2012%>%
+  full_join(vote_percent, by = "fec_id")
+
+
+committees_contributions <- committees %>%
+ full_join(contributions, by = "cmte_id")%>%
+rename( "fec_id" ="cand_id.y")
+
+contrabutions_candidates<-candidates_2012_house %>%
+  left_join(committees_contributions, by = "fec_id")%>%
+  group_by(candidate_name,cand_party_affiliation,cand_city,cand_office_district, fec_id, cand_office_state, Total_primary, Total_general,percent, total)%>%
+  filter(cand_party_affiliation == "DEM"|cand_party_affiliation == "REP") %>% 
+  mutate(transaction=sum(transaction_amt)) %>%
+  filter(percent > 1 )
+
+```
+
+
+```{r,,message=FALSE, warning=FALSE}
+Data1<-contrabutions_candidates%>%
+  group_by(cand_office_district, cand_office_state, transaction)%>%
+  summarize(Total = sum(Total_general), 
+            D = sum(ifelse(cand_party_affiliation == "DEM", Total_general, 0)), 
+            R = sum(ifelse(cand_party_affiliation == "REP", Total_general , 0)), 
+            Prop_dem = ((100*D)/Total), 
+            Prop_R = ((100*R)/Total), 
+            margin = abs(Prop_dem - Prop_R/Total))%>%
+  mutate(winning_party = ifelse((Prop_dem > 50), "D", "R"))
+
+Data2<-Data1%>%
+  group_by(cand_office_state)%>%
+  summarise(fifty_line=mean(Total))
+Data3<-Data1%>%
+  full_join(Data2, by= "cand_office_state")
+
+
+state_filter<-function(state_arg){Data3 %>%
+    filter(cand_office_state == state_arg)}
+plot_filter<-function(data_a){print(ggplot(data=data_a, aes(x=transaction, y =Total )) + 
+  geom_point(aes(fill = winning_party, size = margin ), alpha=0.45, shape = 21, color="black", stroke = 1.29, position=position_dodge(width=0.7)) +
+  geom_line(aes(y = data_a$fifty_line))+
+  scale_fill_manual(values = c("D" = "darkblue", "R" = "red"),"Party that won the district") +
+    ggtitle(data_a$cand_office_state)+
+    scale_y_continuous("Amount of Money Spent")+
+  scale_x_continuous("Total ballots cast") +
+    scale_size_continuous(range = c(1.725, 4.75),"Margin of Victoy(%)")+
+    theme(axis.ticks.length = unit(4, "mm"), axis.ticks.y = element_blank()))}
+     
+
+#example:
+plot_filter(state_filter("TX"))
+
+#plotting all states: 
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  require(grid)}
+multiplot(lapply(lapply(Data1$cand_office_state,state_filter), plot_filter), cols = 6) 
+  
+
+```
+
+
+
+
+
+
+
+>>>>>>> ca0125ed890a7314dadf03961f013999bd2a8177
+
+
