@@ -68,15 +68,17 @@ Democrats <- link_test %>%
 
 
 ```{r,message=FALSE, warning=FALSE}
-state_district<-house_elections %>%
-  group_by(state,district)%>%
+#district elections in states
+state_district <-house_elections %>%
+  group_by(state, district)%>%
   summarise(gen_total=sum(general_votes),
             runoff_total=sum(runoff_votes), 
             primary_total = sum(primary_votes))
 head(state_district, n=10)
 
-vote_percent<-house_elections %>%
- merge(state_district, by = c("state","district")) %>%
+#voter percentage in house elections
+vote_percent <-house_elections %>%
+  merge(state_district, by = c("state","district")) %>%
   group_by(fec_id,ge_winner)%>%
   summarise(ratio=(general_votes/gen_total), 
             percent = (general_votes/gen_total)*100) 
@@ -86,24 +88,29 @@ vote_percent<-house_elections %>%
 ```
 
 ```{r,message=FALSE, warning=FALSE}
- 
-  H_candidates_2012 <- candidates %>%
+#house candidates in 2012 
+H_candidates_2012 <- candidates %>%
   filter(cand_office == "H",cand_election_yr==2012) %>%
   rename("candidate_name" = "cand_name") %>%
   rename("fec_id" = "cand_id")
 
- percent_votes<-H_candidates_2012 %>%
+#votes for primaries, general elections, and total votes from both
+percent_votes <-H_candidates_2012 %>%
  left_join(house_elections, by = "fec_id")%>%
    group_by(fec_id) %>%
-summarize(Total_primary = sum(primary_votes), Total_general = sum(general_votes), total= Total_primary + Total_general)
+  summarize(Total_primary = sum(primary_votes), 
+            Total_general = sum(general_votes), 
+            total= Total_primary + Total_general)
 
+#information on candidates
 candidates_2012 <- candidates %>%
   filter(cand_office == "H",cand_election_yr==2012) %>%
   rename("candidate_name" = "cand_name") %>%
   rename("fec_id" = "cand_id") %>%
  full_join(percent_votes, by = "fec_id") 
 
-candidates_2012_house<-candidates_2012%>%
+#building up final data set
+candidates_2012_house <-candidates_2012%>%
   full_join(vote_percent, by = "fec_id")
 
 
@@ -111,9 +118,10 @@ committees_contributions <- committees %>%
  full_join(contributions, by = "cmte_id")%>%
 rename( "fec_id" ="cand_id.y")
 
-contrabutions_candidates<-candidates_2012_house %>%
+#candidates 
+contrabutions_candidates <-candidates_2012_house %>%
   left_join(committees_contributions, by = "fec_id")%>%
-  group_by(candidate_name,cand_party_affiliation,cand_city,cand_office_district, fec_id, cand_office_state, Total_primary, Total_general,percent, total)%>%
+  group_by(candidate_name, cand_party_affiliation,cand_city, cand_office_district, fec_id, cand_office_state, Total_primary, Total_general,percent, total)%>%
   filter(cand_party_affiliation == "DEM"|cand_party_affiliation == "REP") %>% 
   mutate(transaction=sum(transaction_amt)) %>%
   filter(percent > 1 )
@@ -121,8 +129,8 @@ contrabutions_candidates<-candidates_2012_house %>%
 ```
 
 
-```{r,,message=FALSE, warning=FALSE}
-Data1<-contrabutions_candidates%>%
+```{r, message=FALSE, warning=FALSE}
+Data1 <-contrabutions_candidates%>%
   group_by(cand_office_district, cand_office_state, transaction)%>%
   summarize(Total = sum(Total_general), 
             D = sum(ifelse(cand_party_affiliation == "DEM", Total_general, 0)), 
@@ -171,4 +179,9 @@ multiplot(lapply(lapply(Data1$cand_office_state,state_filter), plot_filter), col
 
 >>>>>>> ca0125ed890a7314dadf03961f013999bd2a8177
 
-
+```{r}
+#plotting all states: 
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  require(grid)}
+multiplot(lapply(lapply(Data1$cand_office_state,state_filter), plot_filter), cols = 6) 
+```
