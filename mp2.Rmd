@@ -2,7 +2,8 @@
 title: "Mini-Project 2"
 author: "Sylvie, Julia and Emily"
 date: "March 7, 2018"
-output: html_document
+output: html_document:
+  code_folding: hide
 ---
 ```{r setup, include=FALSE, message=FALSE}
 library(tidyverse)
