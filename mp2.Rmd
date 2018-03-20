@@ -119,7 +119,7 @@ plot_filter<-function(data_a){print(ggplot(data=data_a, aes(x=transaction, y =To
 #example:
 plot_filter(state_filter("NJ"))
 ```
-
+This graph shows the interaction between money spent, total ballots cast, and margin of victory, shown by district as well as party. The take home message of this particular graph is that in New Jersey, there was no true relationship between any of the variables, other than the fact that in this state, democrats were generally winning by greater margins. 
 ```{r, message=FALSE, warning=FALSE}
 #plotting all states: 
 lapply(lapply(Data1$cand_office_state,state_filter), plot_filter)
