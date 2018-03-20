@@ -26,6 +26,7 @@ load("house_elections.rda")
 ```
 
 ```{r, message= FALSE, warning= FALSE}
+#Organizing initial data so everything can be mapped on one graph
 contributions_and_elections <- house_elections %>%
   rename("cand_id"= fec_id)%>%
   full_join(contributions, by= "cand_id")%>%
@@ -71,47 +72,32 @@ house_winners_all <- REP_Winners %>%
   full_join(Dem_Winners, by= "state")
 ```
 
-```{r}
+```{r, message= FALSE, warning= FALSE}
+#sorting to just get the number of winners by the type of winner
 number_of_winners <- house_winners_all %>%
   select(state:REP_Incumbent_Winners, REP_Challenger_Winners, Dem_Incumbent_Winners, Dem_Challenger_Winners)%>%
   rename("REP_Challengers"= REP_Challenger_Winners, "REP_Incumbents"= REP_Incumbent_Winners,"DEM_Challengers"= Dem_Challenger_Winners, "DEM_Incumbents"= Dem_Incumbent_Winners)%>%
   gather(Winner_Type, Number_of_winners, -state)
 ```
 
-```{r}
+```{r, message= FALSE, warning= FALSE}
+#sorting to just get the amount of contributions (average) by the type of winner
 average_contributions <- house_winners_all %>%
   select(state:REP_Incumbent_Contribution, REP_Challenger_Contributions, Dem_Incumbent_Contribution, Dem_Challenger_Contributions)%>%
   rename("REP_Challengers"= REP_Challenger_Contributions, "REP_Incumbents"= REP_Incumbent_Contribution,"DEM_Challengers"= Dem_Challenger_Contributions, "DEM_Incumbents"= Dem_Incumbent_Contribution)%>%
   gather(Winner_Type, avg_contributions, -state)
 ```
 
-```{r}
+```{r, message= FALSE, warning= FALSE}
+#final dataset to see the data from all states in one table
 winners <- number_of_winners%>%
   merge(average_contributions, by=c("state","Winner_Type"))%>%
   na.omit()
 ```
 
-```{r, message=FALSE, warning= FALSE}
-
-winners_plot_by_state <- function(name_arg) {
-  winners%>%
-    filter(state==name_arg)}
-```
 
 ```{r, message= FALSE, warning= FALSE}
-
-ggplot(winners, aes(x= avg_contributions, y= Number_of_winners))+
-  geom_point(aes(shape= Winner_Type, fill= Winner_Type), alpha= 0.45, size= 3)+
-   scale_fill_manual(values = c("REP_Incumbents" = "red", "REP_Challengers" = "red", "DEM_Incumbents"="darkblue", "DEM_Challengers"= "darkblue"))+
-  scale_shape_manual(values= c("REP_Incumbents"= 24, "DEM_Incumbents"=24, "REP_Challengers"= 21, "DEM_Challengers"=21))+
-  scale_x_log10()+
-  scale_y_log10()+
-  xlab("Total Winners per State")+
-  ylab("Average Contributions")
-
-```
-
-```{r, message= FALSE, warning= FALSE}
+#Sorting the data so we can see what it looks like for states that had either more democratic or more republican winners
 
 all_winners <- contributions_and_elections %>%
   filter(ge_winner == "W")%>%
@@ -120,31 +106,47 @@ all_winners <- contributions_and_elections %>%
   spread(party, -state)%>%
   select(state, R, D)
 
-```
-
-```{r, message= FALSE, warning= FALSE}
-
 all_winners_2 <- replace_na(all_winners, replace= list("D"=0, "R"=0))
 
 Democratic_states <- all_winners_2 %>%
   filter(D > R)%>%
-  select(state)
+  select(state)%>%
+  left_join(winners, by= "state")
 
 Republican_states <- all_winners_2 %>%
   filter(R > D)%>%
-  select(state)
+  select(state)%>%
+  left_join(winners, by= "state")
 ```
 
 ```{r, message= FALSE, warning= FALSE}
+#Setting up a plot function for the three data sets to use later
 
-ggplot(winners, aes(x= avg_contributions, y= Number_of_winners))+
+winning_state_plotter <- function(name_arg){
+ggplot(name_arg, aes(x= avg_contributions, y= Number_of_winners))+
   geom_point(aes(shape= Winner_Type, fill= Winner_Type), alpha= 0.45, size= 3)+
    scale_fill_manual(values = c("REP_Incumbents" = "red", "REP_Challengers" = "red", "DEM_Incumbents"="darkblue", "DEM_Challengers"= "darkblue"))+
   scale_shape_manual(values= c("REP_Incumbents"= 24, "DEM_Incumbents"=24, "REP_Challengers"= 21, "DEM_Challengers"=21))+
   scale_x_log10()+
   scale_y_log10()+
-  xlab("Total Winners per State")+
-  ylab("Average Contributions")
+  xlab("Average Contributions")+
+  ylab("Total Winners per State")
+}
 
+```
 
+```{r, message= FALSE, warning= FALSE}
+#Plotting using the function for the three datasets 
+
+#All states
+winning_state_plotter(winners)+
+  labs(title= "All States")
+
+#Democratic states
+winning_state_plotter(Democratic_states)+
+  labs(title= "Democratic States")
+
+#Republican states
+winning_state_plotter(Republican_states)+
+  labs(title= "Republican States")
 ```
