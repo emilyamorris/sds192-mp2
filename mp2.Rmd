@@ -27,6 +27,11 @@ load("contributions.rda")
 load("individuals.rda")
 ```
 
+![](https://www.occupy.com/sites/default/files/styles/slide_narrow/public/field/image/08superpac1-articlelarge-v2_0.jpg?itok=DObl1z0M)
+
+###*Background Information*
+
+####*What we did to the data and why*
 
 ```{r, message= FALSE, warning= FALSE}
 #Organizing initial data so everything can be mapped on one graph
@@ -98,7 +103,7 @@ winners <- number_of_winners%>%
   na.omit()
 ```
 
-
+####*Why we did the dividing-up to get democrat and republican states and what we thought it could show us*
 ```{r, message= FALSE, warning= FALSE}
 #Sorting the data so we can see what it looks like for states that had either more democratic or more republican winners
 
@@ -122,6 +127,8 @@ Republican_states <- all_winners_2 %>%
   left_join(winners, by= "state")
 ```
 
+####*Setting up the plot function*
+
 ```{r, message= FALSE, warning= FALSE}
 #Setting up a plot function for the three data sets to use later
 
@@ -144,6 +151,8 @@ winning_state_plotter <- function(name_arg){
 
 ```
 
+####*Overall trends in the data for all states*
+
 ```{r, message= FALSE, warning= FALSE, fig.width= 14, fig.height= 6}
 #Plotting using the function for the three datasets 
 
@@ -151,6 +160,11 @@ winning_state_plotter <- function(name_arg){
 winning_state_plotter(winners)+
   labs(title= "Total Number of House Seat Winners Per State by the Average Contributions Given in that State 
  for All US States", subtitle= "According to the types of candidates that won")
+```
+
+####*Trends for majority democrat winner states and majority republican winner states*
+
+```{r, message= FALSE, warning= FALSE, fig.width= 14, fig.height= 6}
 
 #Democratic states
 winning_state_plotter(Democratic_states)+
