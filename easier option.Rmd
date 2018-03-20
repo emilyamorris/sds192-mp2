@@ -1,0 +1,150 @@
+---
+title: "side stuff"
+author: "Emily Morris"
+date: "March 19, 2018"
+output: html_document
+---
+```{r setup, include=FALSE, message=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(ggthemes)
+library(RColorBrewer)
+library(extrafont)
+#install.packages("gridExtra")
+library("gridExtra")
+#install.packages("ggpubr")
+library(ggpubr)
+library(dplyr)
+```
+
+```{r, include=FALSE,message=FALSE}
+load("house_elections.rda")
+#load("candidates.rda")
+#load("committees.rda")
+#load("contributions.rda")
+#load("individuals.rda")
+```
+
+```{r, message= FALSE, warning= FALSE}
+contributions_and_elections <- house_elections %>%
+  rename("cand_id"= fec_id)%>%
+  full_join(contributions, by= "cand_id")%>%
+  select(cand_id:ge_winner, transaction_amt)%>%
+  rename("state"=state.x)
+
+house_winners_incumbents_DEMS <- contributions_and_elections %>%
+  filter(ge_winner== "W", incumbent== "TRUE", transaction_amt > 0, party== "D")%>%
+  group_by(state)%>%
+  summarise(total_winnners_per_state= n(),
+            avg_contribution=mean(transaction_amt))%>%
+  rename("Dem_Incumbent_Winners"= total_winnners_per_state, "Dem_Incumbent_Contribution"= avg_contribution)
+
+
+house_winners_challengers_DEMS <- contributions_and_elections %>%
+  filter(ge_winner == "W", incumbent == "FALSE", transaction_amt > 0, party== "D")%>%
+  group_by(state)%>%
+  summarise(total_winners_per_state= n(),
+            avg_contribution = mean(transaction_amt))%>%
+  rename("Dem_Challenger_Winners"= total_winners_per_state, "Dem_Challenger_Contributions"= avg_contribution)
+
+Dem_Winners <- house_winners_incumbents_DEMS %>%
+  left_join(house_winners_challengers_DEMS, by="state")
+
+house_winners_incumbents_REPS <- contributions_and_elections %>%
+  filter(ge_winner== "W", incumbent== "TRUE", transaction_amt > 0, party== "R")%>%
+  group_by(state)%>%
+  summarise(total_winnners_per_state= n(),
+            avg_contribution=mean(transaction_amt))%>%
+  rename("REP_Incumbent_Winners"= total_winnners_per_state, "REP_Incumbent_Contribution"= avg_contribution)
+
+house_winners_challengers_REPS <- contributions_and_elections %>%
+  filter(ge_winner == "W", incumbent == "FALSE", transaction_amt > 0, party== "R")%>%
+  group_by(state)%>%
+  summarise(total_winners_per_state= n(),
+            avg_contribution = mean(transaction_amt))%>%
+  rename("REP_Challenger_Winners"= total_winners_per_state, "REP_Challenger_Contributions"= avg_contribution)
+
+REP_Winners <- house_winners_incumbents_REPS %>%
+  left_join(house_winners_challengers_REPS, by="state")
+
+house_winners_all <- REP_Winners %>%
+  full_join(Dem_Winners, by= "state")
+```
+
+```{r}
+number_of_winners <- house_winners_all %>%
+  select(state:REP_Incumbent_Winners, REP_Challenger_Winners, Dem_Incumbent_Winners, Dem_Challenger_Winners)%>%
+  rename("REP_Challengers"= REP_Challenger_Winners, "REP_Incumbents"= REP_Incumbent_Winners,"DEM_Challengers"= Dem_Challenger_Winners, "DEM_Incumbents"= Dem_Incumbent_Winners)%>%
+  gather(Winner_Type, Number_of_winners, -state)
+```
+
+```{r}
+average_contributions <- house_winners_all %>%
+  select(state:REP_Incumbent_Contribution, REP_Challenger_Contributions, Dem_Incumbent_Contribution, Dem_Challenger_Contributions)%>%
+  rename("REP_Challengers"= REP_Challenger_Contributions, "REP_Incumbents"= REP_Incumbent_Contribution,"DEM_Challengers"= Dem_Challenger_Contributions, "DEM_Incumbents"= Dem_Incumbent_Contribution)%>%
+  gather(Winner_Type, avg_contributions, -state)
+```
+
+```{r}
+winners <- number_of_winners%>%
+  merge(average_contributions, by=c("state","Winner_Type"))%>%
+  na.omit()
+```
+
+```{r, message=FALSE, warning= FALSE}
+
+winners_plot_by_state <- function(name_arg) {
+  winners%>%
+    filter(state==name_arg)}
+```
+
+```{r, message= FALSE, warning= FALSE}
+
+ggplot(winners, aes(x= avg_contributions, y= Number_of_winners))+
+  geom_point(aes(shape= Winner_Type, fill= Winner_Type), alpha= 0.45, size= 3)+
+   scale_fill_manual(values = c("REP_Incumbents" = "red", "REP_Challengers" = "red", "DEM_Incumbents"="darkblue", "DEM_Challengers"= "darkblue"))+
+  scale_shape_manual(values= c("REP_Incumbents"= 24, "DEM_Incumbents"=24, "REP_Challengers"= 21, "DEM_Challengers"=21))+
+  scale_x_log10()+
+  scale_y_log10()+
+  xlab("Total Winners per State")+
+  ylab("Average Contributions")
+
+```
+
+```{r, message= FALSE, warning= FALSE}
+
+all_winners <- contributions_and_elections %>%
+  filter(ge_winner == "W")%>%
+  group_by(state, party)%>%
+  summarise(winners= n())%>%
+  spread(party, -state)%>%
+  select(state, R, D)
+
+```
+
+```{r, message= FALSE, warning= FALSE}
+
+all_winners_2 <- replace_na(all_winners, replace= list("D"=0, "R"=0))
+
+Democratic_states <- all_winners_2 %>%
+  filter(D > R)%>%
+  select(state)
+
+Republican_states <- all_winners_2 %>%
+  filter(R > D)%>%
+  select(state)
+```
+
+```{r, message= FALSE, warning= FALSE}
+
+ggplot(winners, aes(x= avg_contributions, y= Number_of_winners))+
+  geom_point(aes(shape= Winner_Type, fill= Winner_Type), alpha= 0.45, size= 3)+
+   scale_fill_manual(values = c("REP_Incumbents" = "red", "REP_Challengers" = "red", "DEM_Incumbents"="darkblue", "DEM_Challengers"= "darkblue"))+
+  scale_shape_manual(values= c("REP_Incumbents"= 24, "DEM_Incumbents"=24, "REP_Challengers"= 21, "DEM_Challengers"=21))+
+  scale_x_log10()+
+  scale_y_log10()+
+  xlab("Total Winners per State")+
+  ylab("Average Contributions")
+
+
+```
