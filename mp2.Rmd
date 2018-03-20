@@ -207,8 +207,8 @@ ggplot(winners, aes(x= avg_contributions, y= Number_of_winners))+
   scale_shape_manual(values= c("REP_Incumbents"= 24, "DEM_Incumbents"=24, "REP_Challengers"= 21, "DEM_Challengers"=21))+
   scale_x_log10()+
   scale_y_log10()+
-  xlab("Total Winners")+
-  ylab("Average Contributions")
+  xlab("Average Contributions")+
+  ylab("Total Winners")
 
 ```
 
