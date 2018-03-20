@@ -132,7 +132,8 @@ ggplot(name_arg, aes(x= avg_contributions, y= Number_of_winners))+
   scale_x_log10()+
   scale_y_log10()+
   xlab("Average Contributions")+
-  ylab("Total Winners per State")
+  ylab("Total Winners per State")+
+  theme_economist()
 }
 
 ```
