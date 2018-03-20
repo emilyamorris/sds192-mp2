@@ -2,7 +2,9 @@
 title: "side stuff"
 author: "Emily Morris"
 date: "March 19, 2018"
-output: html_document
+output: 
+  html_document:
+    code_folding: hide
 ---
 ```{r setup, include=FALSE, message=FALSE}
 library(tidyverse)
@@ -19,10 +21,10 @@ library(dplyr)
 
 ```{r, include=FALSE,message=FALSE}
 load("house_elections.rda")
-#load("candidates.rda")
-#load("committees.rda")
-#load("contributions.rda")
-#load("individuals.rda")
+load("candidates.rda")
+load("committees.rda")
+load("contributions.rda")
+load("individuals.rda")
 ```
 
 ```{r, message= FALSE, warning= FALSE}
