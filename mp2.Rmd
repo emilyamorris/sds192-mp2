@@ -125,7 +125,11 @@ plot_filter(state_filter("NJ"))
 lapply(lapply(Data1$cand_office_state,state_filter), plot_filter)
   
 ```
+
+
 ```{r, message= FALSE, warning= FALSE}
+#Setting up data so that we can map the total winners of a party against the average contributions by whether or not they were incumbents or challengers
+
 contributions_and_elections <- house_elections %>%
   rename("cand_id"= fec_id)%>%
   full_join(contributions, by= "cand_id")%>%
@@ -169,34 +173,20 @@ REP_Winners <- house_winners_incumbents_REPS %>%
 
 house_winners_all <- REP_Winners %>%
   full_join(Dem_Winners, by= "state")
-```
 
-```{r}
 number_of_winners <- house_winners_all %>%
   select(state:REP_Incumbent_Winners, REP_Challenger_Winners, Dem_Incumbent_Winners, Dem_Challenger_Winners)%>%
   rename("REP_Challengers"= REP_Challenger_Winners, "REP_Incumbents"= REP_Incumbent_Winners,"DEM_Challengers"= Dem_Challenger_Winners, "DEM_Incumbents"= Dem_Incumbent_Winners)%>%
   gather(Winner_Type, Number_of_winners, -state)
-```
 
-```{r}
 average_contributions <- house_winners_all %>%
   select(state:REP_Incumbent_Contribution, REP_Challenger_Contributions, Dem_Incumbent_Contribution, Dem_Challenger_Contributions)%>%
   rename("REP_Challengers"= REP_Challenger_Contributions, "REP_Incumbents"= REP_Incumbent_Contribution,"DEM_Challengers"= Dem_Challenger_Contributions, "DEM_Incumbents"= Dem_Incumbent_Contribution)%>%
   gather(Winner_Type, avg_contributions, -state)
-```
 
-```{r}
 winners <- number_of_winners%>%
   merge(average_contributions, by=c("state","Winner_Type"))%>%
   na.omit()
-```
-
-
-```{r, message=FALSE, warning= FALSE}
-
-winners_plot_by_state <- function(name_arg) {
-  winners%>%
-    filter(state==name_arg)}
 ```
 
 ```{r, message= FALSE, warning= FALSE}
