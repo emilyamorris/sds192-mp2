@@ -144,18 +144,21 @@ winning_state_plotter <- function(name_arg){
 
 ```
 
-```{r, message= FALSE, warning= FALSE}
+```{r, message= FALSE, warning= FALSE, fig.width= 14, fig.height= 6}
 #Plotting using the function for the three datasets 
 
 #All states
 winning_state_plotter(winners)+
-  labs(title= "All States")
+  labs(title= "Total Number of House Seat Winners Per State by the Average Contributions Given in that State 
+ for All US States", subtitle= "According to the types of candidates that won")
 
 #Democratic states
 winning_state_plotter(Democratic_states)+
-  labs(title= "Democratic States")
+  labs(title= "Total Number of House Seat Winners Per State by the Average Contributions Given in that State 
+ for States with Majority Democratic Winners", subtitle= "According to the types of candidates that won")
 
 #Republican states
 winning_state_plotter(Republican_states)+
-  labs(title= "Republican States")
+  labs(title= "Total Number of House Seat Winners Per State by the Average Contributions Given in that State 
+ for States with Majority Republican Winners", subtitle= "According to the types of candidates that won")
 ```
