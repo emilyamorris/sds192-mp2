@@ -190,6 +190,7 @@ winners <- number_of_winners%>%
 ```
 
 ```{r, message= FALSE, warning= FALSE}
+#Plotting above data; shows that challengers on average get more contributions on average than incumbents do, and tend to win about as often as incumbents do only when they recieve significantly more money (log scale)
 
 ggplot(winners, aes(x= avg_contributions, y= Number_of_winners))+
   geom_point(aes(shape= Winner_Type, fill= Winner_Type), alpha= 0.45, size= 3)+
