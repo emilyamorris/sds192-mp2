@@ -30,6 +30,7 @@ load("individuals.rda")
 ![](https://www.occupy.com/sites/default/files/styles/slide_narrow/public/field/image/08superpac1-articlelarge-v2_0.jpg?itok=DObl1z0M)
 
 ###*Background Information*
+The Federal Election Commission (FEC) was formed in 1974 as an independent regulatory committee intended to uphold campaign finance laws. However, this agency has recently been struggling to do its job because of a lack of consensus between members, as well as a lack of funding. The analysis that we have done here is of data that all came from the FEC, from their archives which include information from 1980 to 2012. We are living in a time of great political unrest in which it is becoming increasingly important to be able to "follow the money." What we sought to do with this data in our analysis was to be able to better understand the relationship between campaign contribution and number of seats won, based on the candidate's party. 
 
 ####*What we did to the data and why*
 
@@ -176,3 +177,9 @@ winning_state_plotter(Republican_states)+
   labs(title= "Total Number of House Seat Winners Per State by the Average Contributions Given in that State 
  for States with Majority Republican Winners", subtitle= "According to the types of candidates that won")
 ```
+
+References: 
+http://www.cfinst.org/law.aspx
+https://www.theatlantic.com/politics/archive/2013/12/another-massive-problem-with-us-democracy-the-fec-is-broken/282404/
+
+The link to our GitHub repository is: https://github.com/emilyamorris/sds192-mp2
