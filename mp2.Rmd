@@ -126,15 +126,20 @@ Republican_states <- all_winners_2 %>%
 #Setting up a plot function for the three data sets to use later
 
 winning_state_plotter <- function(name_arg){
-ggplot(name_arg, aes(x= avg_contributions, y= Number_of_winners))+
-  geom_point(aes(shape= Winner_Type, fill= Winner_Type), alpha= 0.45, size= 3)+
-   scale_fill_manual(values = c("REP_Incumbents" = "red", "REP_Challengers" = "red", "DEM_Incumbents"="darkblue", "DEM_Challengers"= "darkblue"))+
-  scale_shape_manual(values= c("REP_Incumbents"= 24, "DEM_Incumbents"=24, "REP_Challengers"= 21, "DEM_Challengers"=21))+
-  scale_x_log10()+
-  scale_y_log10()+
-  xlab("Average Contributions")+
-  ylab("Total Winners per State")+
-  theme_economist()
+  na.omit(name_arg)%>%
+    ggplot(aes(x= avg_contributions, y= Number_of_winners))+
+    geom_point(aes(shape= Winner_Type, fill= Winner_Type), alpha= 0.45, size= 3)+
+    scale_fill_manual(name= "Type of Winner", 
+                     labels= c("REP_Incumbents"= "Republican Incumbent", "REP_Challengers"="Republican Challengers", "DEM_Incumbents"= "Democratic Incumbents", "DEM_Challengers"="Democratic Challengers", "NA"=" "),
+                     values = c("REP_Incumbents" = "red", "REP_Challengers" = "red", "DEM_Incumbents"="darkblue", "DEM_Challengers"= "darkblue"))+
+    scale_shape_manual(name= "Type of Winner", 
+                       labels= c("REP_Incumbents"= "Republican Incumbent", "REP_Challengers"="Republican Challengers", "DEM_Incumbents"= "Democratic Incumbents", "DEM_Challengers"="Democratic Challengers", "NA"=" "),
+                       values= c("REP_Incumbents"= 24, "DEM_Incumbents"=24, "REP_Challengers"= 21, "DEM_Challengers"=21))+
+    scale_x_log10()+
+    scale_y_log10()+
+    xlab("Average Contributions")+
+    ylab("Total Winners per State")+
+    theme_economist()
 }
 
 ```
@@ -154,4 +159,3 @@ winning_state_plotter(Democratic_states)+
 winning_state_plotter(Republican_states)+
   labs(title= "Republican States")
 ```
-
