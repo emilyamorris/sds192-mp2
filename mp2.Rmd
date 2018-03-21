@@ -95,16 +95,16 @@ house_winners_all <- REP_Winners %>%
 ```{r, message= FALSE, warning= FALSE}
 #sorting to just get the number of winners by the type of winner
 number_of_winners <- house_winners_all %>%
-  select(state:REP_Incumbent_Winners, REP_Challenger_Winners, Dem_Incumbent_Winners, Dem_Challenger_Winners)%>%
-  rename("REP_Challengers"= REP_Challenger_Winners, "REP_Incumbents"= REP_Incumbent_Winners,"DEM_Challengers"= Dem_Challenger_Winners, "DEM_Incumbents"= Dem_Incumbent_Winners)%>%
+  select(state:REP_incumbent_number_of_winners, REP_challenger_number_of_winners, Dem_incumbent_number_of_winners, Dem_challenger_number_of_winners)%>%
+  rename("REP_Challengers"= REP_challenger_number_of_winners, "REP_Incumbents"= REP_incumbent_number_of_winners,"DEM_Challengers"= Dem_challenger_number_of_winners, "DEM_Incumbents"= Dem_incumbent_number_of_winners)%>%
   gather(Winner_Type, Number_of_winners, -state)
 ```
 
 ```{r, message= FALSE, warning= FALSE}
 #sorting to just get the amount of contributions (average) by the type of winner
 average_contributions <- house_winners_all %>%
-  select(state:REP_Incumbent_Contribution, REP_Challenger_Contributions, Dem_Incumbent_Contribution, Dem_Challenger_Contributions)%>%
-  rename("REP_Challengers"= REP_Challenger_Contributions, "REP_Incumbents"= REP_Incumbent_Contribution,"DEM_Challengers"= Dem_Challenger_Contributions, "DEM_Incumbents"= Dem_Incumbent_Contribution)%>%
+  select(state:REP_incumbent_avg_contribution_per_state, REP_challenger_avg_contribution_per_state, Dem_incumbent_avg_contribution_per_state, Dem_challenger_avg_contribution_per_state)%>%
+  rename("REP_Challengers"= REP_challenger_avg_contribution_per_state, "REP_Incumbents"= REP_incumbent_avg_contribution_per_state,"DEM_Challengers"= Dem_challenger_avg_contribution_per_state, "DEM_Incumbents"= Dem_incumbent_avg_contribution_per_state)%>%
   gather(Winner_Type, avg_contributions, -state)
 ```
 
@@ -151,17 +151,17 @@ winning_state_plotter <- function(name_arg){
     ggplot(aes(x= avg_contributions, y= Number_of_winners))+
     geom_point(aes(shape= Winner_Type, fill= Winner_Type), alpha= 0.45, size= 3)+
     scale_fill_manual(name= "Type of Winner", 
-                     labels= c("REP_Incumbents"= "Republican Incumbents", "REP_Challengers"="Republican Challengers", "DEM_Incumbents"= "Democrat Incumbents", "DEM_Challengers"="Democrat Challengers", "NA"=" "),
+                     labels= c("REP_Incumbents"= "Republican Incumbent", "REP_Challengers"="Republican Challengers", "DEM_Incumbents"= "Democratic Incumbents", "DEM_Challengers"="Democratic Challengers", "NA"=" "),
                      values = c("REP_Incumbents" = "red", "REP_Challengers" = "red", "DEM_Incumbents"="darkblue", "DEM_Challengers"= "darkblue"))+
     scale_shape_manual(name= "Type of Winner", 
-                       labels= c("REP_Incumbents"= "Republican Incumbents", "REP_Challengers"="Republican Challengers", "DEM_Incumbents"= "Democrat Incumbents", "DEM_Challengers"="Democrat Challengers", "NA"=" "),
+                       labels= c("REP_Incumbents"= "Republican Incumbent", "REP_Challengers"="Republican Challengers", "DEM_Incumbents"= "Democratic Incumbents", "DEM_Challengers"="Democratic Challengers", "NA"=" "),
                        values= c("REP_Incumbents"= 24, "DEM_Incumbents"=24, "REP_Challengers"= 21, "DEM_Challengers"=21))+
     scale_x_log10()+
-    scale_y_log10()+
     xlab("Average Contributions")+
-    ylab("Total Winners Per State")+
+    ylab("Total Winners per State")+
     theme_economist()
 }
+
 
 ```
 
