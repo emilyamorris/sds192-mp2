@@ -4,7 +4,26 @@ author: "Emily Morris"
 date: "March 20, 2018"
 output: html_document
 ---
+```{r setup, include=FALSE, message=FALSE}
+library(tidyverse)
+library(ggplot2)
+library(ggthemes)
+library(RColorBrewer)
+library(extrafont)
+#install.packages("gridExtra")
+library("gridExtra")
+#install.packages("ggpubr")
+library(ggpubr)
+library(dplyr)
+```
 
+```{r, include=FALSE,message=FALSE}
+load("house_elections.rda")
+load("candidates.rda")
+load("committees.rda")
+load("contributions.rda")
+load("individuals.rda")
+```
 
 
 ```{r,message=FALSE, warning=FALSE}
@@ -98,10 +117,13 @@ plot_filter<-function(data_a){print(ggplot(data=data_a, aes(x=transaction, y =To
 plot_filter(state_filter("NJ"))
 ```
 
-This is a scatterplot illustrating the relationship between Total ballots cast and Total number of Contributions per district in the 2012 House elections for the state of New Jersey. Each dot represents one district. The data points are organized on a Cartesian coordinate system. The y-axis (Total number of Contributions)  and the x-axis (Total ballots cast) both use a normal scale. The size of each dot is proportional to the margin of victory for the winner of the district (%), and the color of of each dot represents which candidate the district swung for; blue representing districts that the democratic candidate won and red representing districts that Republicans won. We can see that districts where more ballots were cast also had a larger amount of total contributions. The scatterplot shows that the districts where more ballots were cast ,this corresponds with the belief that higher voter turnout swings for the democratic candidate. We also saw that these districts are more likely to lean Democratic and have larger margins of victory and the more sparsely populated, the distirct the more likely it would vote Republican. However over all most districts in NJ  were won by democarts. We can also see that in New Jersey overall the districts that did swing for the Republican swung by smaller margins than districts that swung in favor of the Democrat. We were hoping that the margin of victory lined up with the money spent in the district but as we can see money spent in a district does not necessarily mean a close race. 
+This is a scatterplot illustrating the relationship between Total ballots cast and Total number of Contributions per district in the 2012 House elections for the state of New Jersey. Each dot represents one district. The data points are organized on a Cartesian coordinate system. The y-axis (Total number of Contributions)  and the x-axis (Total ballots cast) both use a normal scale. The size of each dot is proportional to the margin of victory for the winner of the district (%), and the color of of each dot represents which candidate the district swung for; blue representing districts that the Democratic candidate won and red representing districts that Republicans won. 
+
+We can see that districts where more ballots were cast also had a larger amount of total contributions. So more money spent in a district leads to higher voter turnout in that district. The scatterplot shows that the districts where more ballots were cast,this corresponds with the belief that higher voter turnout swings for the democratic candidate. We also saw that these districts are more likely to lean Democratic and have larger margins of victory and the more sparsely populated, the district the more likely it would vote Republican. However over all most districts in NJ  were won by democrats. We can also see that in New Jersey overall the districts that did swing for the Republican swung by smaller margins than districts that swung in favor of the Democrat. We were hoping that the margin of victory lined up with the money spent in the district but as we can see money spent in a district does not necessarily mean a close race. 
 
 ```{r, message=FALSE, warning=FALSE}
 #plotting all states: 
 lapply(lapply(Data1$cand_office_state,state_filter), plot_filter)
   
 ```
+
