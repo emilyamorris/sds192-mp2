@@ -30,10 +30,10 @@ load("individuals.rda")
 ![](https://www.occupy.com/sites/default/files/styles/slide_narrow/public/field/image/08superpac1-articlelarge-v2_0.jpg?itok=DObl1z0M)
 
 ###*Background Information*
-The Federal Election Commission (FEC) was formed in 1974 as an independent regulatory committee intended to uphold campaign finance laws. However, this agency has recently been struggling to do its job because of a lack of consensus between members, as well as a lack of funding. The analysis that we have done here is of data that all came from the FEC, from their archives which include information from 1980 to 2012. We are living in a time of great political unrest in which it is becoming increasingly important to be able to "follow the money." The question we sought to answer through our analysis was how campaign contributions affected the number of seats won by party, depending on whether or not the candidate was a challenger or an incumbent. 
+The Federal Election Commission (FEC) was formed in 1974 as an independent regulatory committee intended to uphold campaign finance laws. However, this agency has recently been struggling to do its job because of a lack of consensus between members, as well as a lack of funding. The analysis that we have done here is of data that all came from the FEC, from their archives which include information from 1980 to 2012. We are living in a time of great political unrest in which it is becoming increasingly important to be able to "follow the money." The question we sought to answer through our analysis was how campaign contributions affected the number of house seats won, separated by party and also by whether the candidate was an incumbent or a challenger. We believed that this research could have a real world implication in being able to better evaluate the effectiveness of campaign contributions. 
 
 ####*What we did to the data and why*
-We joined house elections with contributions, and then seperated out the data to determine the number of incumbent versus challenger winners, by party. We decided to average contributions as well as represent total winners per state in this way so that our analysis could be shown rather simply in a few graphs rather than having a graph for every state. 
+We joined house elections with contributions, and then seperated out the data to determine the number of incumbent versus challenger winners, as well as separating out the data by party. We decided to average contributions as well as represent total winners per state in this way so that our analysis could be shown rather simply in a few graphs rather than having a graph for every state. 
 ```{r, message= FALSE, warning= FALSE}
 #Organizing initial data so everything can be mapped on one graph
 contributions_and_elections <- house_elections %>%
@@ -116,7 +116,7 @@ winners <- number_of_winners%>%
 ```
 
 ####*Why we did the dividing-up to get democrat and republican states and what we thought it could show us*
-We wanted to expand our data analysis past a general look at averages over all of the states and instead look at how party trends in a state affect contributions as well as the outcomes of the races. 
+In the second and third graphs, we separated the data by majority democrat and majority republican by state in order to be able to make a comparison between the two. We suspected that money spent might have a different impact depending on party and incumbancy depending on which party was in majority control of the state. 
 
 ```{r, message= FALSE, warning= FALSE}
 #Sorting the data so we can see what it looks like for states that had either more democratic or more republican winners
@@ -168,7 +168,7 @@ winning_state_plotter <- function(name_arg){
 ```
 
 ####*Overall trends in the data for all states*
-The take away from this graph is that more money, on average, was contributed to challengers than to contributors, which logically makes sense as these races would be more high energy and high stakes, as there would be a change for the party in control to change. On average, there are more incumbent wins, regardless of contributions. One thing that we can learn from this analysis which has real world applicability is that more money needs to be raised and spent on a challenger candidate if they are going to have much chance of winning. 
+The first graph represents the overall trends in all US states, which was thtat a lot more more money had to be spent on challengers in order for them to win, and fewer challengers won in general regardless of average contributions, which makes sense. The scatterplot shows that as the number of average contributions increases in a state the higher number of challengers (from both parties) win in that state. Converserly we can see that the more incumbment wins, the less money spent in the state. More money is spent on challengers than incumbents, in general, which makes sense. People are more inspired to contribute to campaigns when change is possible. We saw the relationship between number of wins and average contributions as the most important and interesting data takeaway, so we mapped it to position because people can most accurately tell position using perceptual hierarchy. The shape of each dot corresponds to whether or not the candidate was a challenger or an incumbent. We chose shape over color because it’s easier to perceive. Lastly, we used the color of each dot to represent party. 
 
 ```{r, message= FALSE, warning= FALSE, fig.width= 14, fig.height= 6}
 #Plotting using the function for the three datasets 
@@ -180,6 +180,7 @@ winning_state_plotter(winners)+
 ```
 
 ####*Trends for majority democrat winner states and majority republican winner states*
+From these two graphs, we can see that the general trend is upheld from the graph of overall results. However, money spent is not directly related to total winners, but rather, there are simply more democratic winners in largely democratic states, and the same is true for its inverse. More money is spent on challengers in republican states than in democratic states. 
 
 ```{r, message= FALSE, warning= FALSE, fig.width= 14, fig.height= 6}
 
@@ -193,9 +194,6 @@ winning_state_plotter(Republican_states)+
   labs(title= "Total Number of House Seat Winners Per State by the Average Contributions Given in that State 
  for States with Majority Republican Winners", subtitle= "According to the types of candidates that won")
 ```
-
-The scatterplot shows that as the number of average contributions increases in a state the higher number of challengers (from both parties) win in that state. Converserly we can see that the more incumbment wins, the less money spent in the state. We can also see that the more wins corresponds with incumbendents. The more money spent the more challengers that win. We saw the relationship between number of wins  and average contributions as the most important and interesting data takeaway, so we mapped it to position because people can most accurately tell position using perceptual hierarchy. The shape of each dot corresponds to whether or not the candidate was a challenger or an incumbent. we chose shape over color because it’s easier to perceive. Lastly, we used the color of each dot to represent party. 
-
 
 References: 
 http://www.cfinst.org/law.aspx
