@@ -44,38 +44,49 @@ contributions_and_elections <- house_elections %>%
 
 house_winners_incumbents_DEMS <- contributions_and_elections %>%
   filter(ge_winner== "W", incumbent== "TRUE", transaction_amt > 0, party== "D")%>%
+  group_by(cand_id, state)%>%
+  summarise(total_contributions_per_winner= n(),
+            avg_contribution_per_cand=mean(transaction_amt))%>%
+  rename("Dem_Incumbent_Winners"= total_contributions_per_winner, "Dem_Incumbent_Contribution"= avg_contribution_per_cand)%>%
   group_by(state)%>%
-  summarise(total_winnners_per_state= n(),
-            avg_contribution=mean(transaction_amt))%>%
-  rename("Dem_Incumbent_Winners"= total_winnners_per_state, "Dem_Incumbent_Contribution"= avg_contribution)
-
+  summarise(Dem_incumbent_number_of_winners = n(),
+            Dem_incumbent_avg_contribution_per_state= mean(Dem_Incumbent_Contribution))
 
 house_winners_challengers_DEMS <- contributions_and_elections %>%
   filter(ge_winner == "W", incumbent == "FALSE", transaction_amt > 0, party== "D")%>%
+  group_by(cand_id, state)%>%
+ summarise(total_contributions_per_winner= n(),
+            avg_contribution_per_cand=mean(transaction_amt))%>%
+  rename("Dem_Challenger_Winners"= total_contributions_per_winner, "Dem_Challenger_Contributions"= avg_contribution_per_cand)%>%
   group_by(state)%>%
-  summarise(total_winners_per_state= n(),
-            avg_contribution = mean(transaction_amt))%>%
-  rename("Dem_Challenger_Winners"= total_winners_per_state, "Dem_Challenger_Contributions"= avg_contribution)
+  summarise(Dem_challenger_number_of_winners = n(),
+            Dem_challenger_avg_contribution_per_state= mean(Dem_Challenger_Contributions))
 
 Dem_Winners <- house_winners_incumbents_DEMS %>%
-  left_join(house_winners_challengers_DEMS, by="state")
+  full_join(house_winners_challengers_DEMS, by="state")
 
 house_winners_incumbents_REPS <- contributions_and_elections %>%
   filter(ge_winner== "W", incumbent== "TRUE", transaction_amt > 0, party== "R")%>%
+  group_by(cand_id, state)%>%
+  summarise(total_contributions_per_winner= n(),
+            avg_contribution_per_cand=mean(transaction_amt))%>%
+  rename("REP_Incumbent_Winners"= total_contributions_per_winner, "REP_Incumbent_Contribution"= avg_contribution_per_cand)%>%
   group_by(state)%>%
-  summarise(total_winnners_per_state= n(),
-            avg_contribution=mean(transaction_amt))%>%
-  rename("REP_Incumbent_Winners"= total_winnners_per_state, "REP_Incumbent_Contribution"= avg_contribution)
+  summarise(REP_incumbent_number_of_winners = n(),
+            REP_incumbent_avg_contribution_per_state= mean(REP_Incumbent_Contribution))
 
 house_winners_challengers_REPS <- contributions_and_elections %>%
   filter(ge_winner == "W", incumbent == "FALSE", transaction_amt > 0, party== "R")%>%
-  group_by(state)%>%
-  summarise(total_winners_per_state= n(),
-            avg_contribution = mean(transaction_amt))%>%
-  rename("REP_Challenger_Winners"= total_winners_per_state, "REP_Challenger_Contributions"= avg_contribution)
+  group_by(cand_id, state)%>%
+  summarise(total_contributions_per_winner= n(),
+            avg_contribution_per_cand=mean(transaction_amt))%>%
+  rename("REP_Challenger_Winners"= total_contributions_per_winner, "REP_Challenger_Contribution"= avg_contribution_per_cand)%>%
+   group_by(state)%>%
+  summarise(REP_challenger_number_of_winners = n(),
+            REP_challenger_avg_contribution_per_state= mean(REP_Challenger_Contribution))
 
 REP_Winners <- house_winners_incumbents_REPS %>%
-  left_join(house_winners_challengers_REPS, by="state")
+  full_join(house_winners_challengers_REPS, by="state")
 
 house_winners_all <- REP_Winners %>%
   full_join(Dem_Winners, by= "state")
