@@ -30,7 +30,7 @@ load("individuals.rda")
 ![](https://www.occupy.com/sites/default/files/styles/slide_narrow/public/field/image/08superpac1-articlelarge-v2_0.jpg?itok=DObl1z0M)
 
 ###*Background Information*
-The Federal Election Commission (FEC) was formed in 1974 as an independent regulatory committee intended to uphold campaign finance laws. However, this agency has recently been struggling to do its job because of a lack of consensus between members, as well as a lack of funding. The analysis that we have done here is of data that all came from the FEC, from their archives which include information from 1980 to 2012. We are living in a time of great political unrest in which it is becoming increasingly important to be able to "follow the money." What we sought to do with this data in our analysis was to be able to better understand the relationship between campaign contribution and number of seats won, based on the candidate's party. 
+The Federal Election Commission (FEC) was formed in 1974 as an independent regulatory committee intended to uphold campaign finance laws. However, this agency has recently been struggling to do its job because of a lack of consensus between members, as well as a lack of funding. The analysis that we have done here is of data that all came from the FEC, from their archives which include information from 1980 to 2012. We are living in a time of great political unrest in which it is becoming increasingly important to be able to "follow the money." The question we sought to answer through our analysis was how campaign contributions affected the number of seats won by party, depending on whether or not the candidate was a challenger or an incumbent. 
 
 ####*What we did to the data and why*
 
@@ -153,6 +153,7 @@ winning_state_plotter <- function(name_arg){
 ```
 
 ####*Overall trends in the data for all states*
+The take away from this graph is that more money, on average, was contributed to challengers than to contributors, which logically makes sense as these races would be more high energy and high stakes, as there would be a change for the party in control to change. 
 
 ```{r, message= FALSE, warning= FALSE, fig.width= 14, fig.height= 6}
 #Plotting using the function for the three datasets 
