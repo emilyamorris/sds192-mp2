@@ -123,6 +123,8 @@ We wanted to expand our data analysis past a general look at averages over all o
 
 all_winners <- contributions_and_elections %>%
   filter(ge_winner == "W")%>%
+  group_by(cand_id, state, party)%>%
+  summarise(total_contributions= n())%>%
   group_by(state, party)%>%
   summarise(winners= n())%>%
   spread(party, -state)%>%
