@@ -33,7 +33,7 @@ load("individuals.rda")
 The Federal Election Commission (FEC) was formed in 1974 as an independent regulatory committee intended to uphold campaign finance laws. However, this agency has recently been struggling to do its job because of a lack of consensus between members, as well as a lack of funding. The analysis that we have done here is of data that all came from the FEC, from their archives which include information from 1980 to 2012. We are living in a time of great political unrest in which it is becoming increasingly important to be able to "follow the money." The question we sought to answer through our analysis was how campaign contributions affected the number of seats won by party, depending on whether or not the candidate was a challenger or an incumbent. 
 
 ####*What we did to the data and why*
-
+We joined house elections with contributions, and then seperated out the data to determine the number of incumbent versus challenger winners, by party. We decided to average contributions as well as represent total winners per state in this way so that our analysis could be shown rather simply in a few graphs rather than having a graph for every state. 
 ```{r, message= FALSE, warning= FALSE}
 #Organizing initial data so everything can be mapped on one graph
 contributions_and_elections <- house_elections %>%
@@ -105,6 +105,7 @@ winners <- number_of_winners%>%
 ```
 
 ####*Why we did the dividing-up to get democrat and republican states and what we thought it could show us*
+We wanted to expand our data analysis past a general look at averages over all of the states and instead look at how party trends in a state affect contributions as well as the outcomes of the races. 
 
 ```{r, message= FALSE, warning= FALSE}
 #Sorting the data so we can see what it looks like for states that had either more democratic or more republican winners
@@ -154,7 +155,7 @@ winning_state_plotter <- function(name_arg){
 ```
 
 ####*Overall trends in the data for all states*
-The take away from this graph is that more money, on average, was contributed to challengers than to contributors, which logically makes sense as these races would be more high energy and high stakes, as there would be a change for the party in control to change. 
+The take away from this graph is that more money, on average, was contributed to challengers than to contributors, which logically makes sense as these races would be more high energy and high stakes, as there would be a change for the party in control to change. On average, there are more incumbent wins, regardless of contributions. One thing that we can learn from this analysis which has real world applicability is that more money needs to be raised and spent on a challenger candidate if they are going to have much chance of winning. 
 
 ```{r, message= FALSE, warning= FALSE, fig.width= 14, fig.height= 6}
 #Plotting using the function for the three datasets 
