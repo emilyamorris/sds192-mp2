@@ -179,6 +179,9 @@ winning_state_plotter(Republican_states)+
  for States with Majority Republican Winners", subtitle= "According to the types of candidates that won")
 ```
 
+The scatterplot shows that as the number of average contributions increases in a state the higher number of challengers (from both parties) win in that state. Converserly we can see that the more incumbment wins, the less money spent in the state. We can also see that the more wins corresponds with incumbendents. The more money spent the more challengers that win.
+
+
 References: 
 http://www.cfinst.org/law.aspx
 https://www.theatlantic.com/politics/archive/2013/12/another-massive-problem-with-us-democracy-the-fec-is-broken/282404/
