@@ -97,7 +97,9 @@ plot_filter<-function(data_a){print(ggplot(data=data_a, aes(x=transaction, y =To
 #example:
 plot_filter(state_filter("NJ"))
 ```
-This graph shows the interaction between money spent, total ballots cast, and margin of victory, shown by district as well as party. The take home message of this particular graph is that in New Jersey, there was no true relationship between any of the variables, other than the fact that in this state, democrats were generally winning by greater margins. 
+
+This is a scatterplot illustrating the relationship between Total ballots cast and Total number of Contributions per district in the 2012 House elections for the state of New Jersey. Each dot represents one district. The data points are organized on a Cartesian coordinate system. The y-axis (Total number of Contributions)  and the x-axis (Total ballots cast) both use a normal scale. The size of each dot is proportional to the margin of victory for the winner of the district (%), and the color of of each dot represents which candidate the district swung for; blue representing districts that the democratic candidate won and red representing districts that Republicans won. We can see that districts where more ballots were cast also had a larger amount of total contributions. The scatterplot shows that the districts where more ballots were cast, they more likely to lean Democratic and have larger margins of victory and the more sparsely populated, the distirct the more likely it would vote Republican. However over all most districts in NJ  were won by democarts. We can also see that in New Jersey overall the districts that did swing for the Republican swung by smaller margins than districts that swung in favor of the Democrat. We were hoping that the margin of victory lined up with the money spent in the district but as we can see money spent in a district does not necessarily mean a close race. 
+
 ```{r, message=FALSE, warning=FALSE}
 #plotting all states: 
 lapply(lapply(Data1$cand_office_state,state_filter), plot_filter)
