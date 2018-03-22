@@ -144,7 +144,7 @@ Republican_states <- all_winners_2 %>%
 ```
 
 ####*Setting up the plot function*
-
+We used a function for ggplot so that we could plot three different data sets without repetitive code.
 ```{r, message= FALSE, warning= FALSE}
 #Setting up a plot function for the three data sets to use later
 
@@ -180,7 +180,7 @@ winning_state_plotter(winners)+
 ```
 
 ####*Trends for majority democrat winner states and majority republican winner states*
-From these two graphs, we can see that the general trend is upheld from the graph of overall results. However, money spent is not directly related to total winners, but rather, there are simply more democratic winners in largely democratic states, and the same is true for its inverse. More money is spent on challengers in republican states than in democratic states. 
+From these two graphs, we can see that the general trend is upheld from the graph of overall results. However, money spent is not directly related to total winners. More money is spent on democratic candidates in democratic states more democratic challengers actually win in those states. Republican incumbents in republican states recieve about the same contributions as democratic incumbents, but win much more often than demorats or republican challengers alike.
 
 ```{r, message= FALSE, warning= FALSE, fig.width= 14, fig.height= 6}
 
