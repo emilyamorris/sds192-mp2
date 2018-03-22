@@ -189,7 +189,8 @@ winning_state_plotter(Democratic_states)+
   labs(title= "Total Number of House Seat Winners Per State by the Average Contributions Given in that State 
  for States with Majority Democrat Winners", subtitle= "According to the types of candidates that won")
 ```
-```{r}
+
+```{r, message=FALSE, warning=FALSE, fig.width=14, fig.height=6}
 
 #Republican states
 winning_state_plotter(Republican_states)+
