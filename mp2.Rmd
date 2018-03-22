@@ -159,7 +159,7 @@ winning_state_plotter <- function(name_arg){
                        labels= c("REP_Incumbents"= "Republican Incumbent", "REP_Challengers"="Republican Challengers", "DEM_Incumbents"= "Democratic Incumbents", "DEM_Challengers"="Democratic Challengers", "NA"=" "),
                        values= c("REP_Incumbents"= 24, "DEM_Incumbents"=24, "REP_Challengers"= 21, "DEM_Challengers"=21))+
     scale_x_log10()+
-    xlab("Average Contributions")+
+    xlab("Average Contributions (in dollars, log10)")+
     ylab("Total Winners per State")+
     theme_economist()
 }
@@ -187,11 +187,14 @@ winning_state_plotter(winners)+
 winning_state_plotter(Democratic_states)+
   labs(title= "Total Number of House Seat Winners Per State by the Average Contributions Given in that State 
  for States with Majority Democrat Winners", subtitle= "According to the types of candidates that won")
+```
+```{r}
 
 #Republican states
 winning_state_plotter(Republican_states)+
   labs(title= "Total Number of House Seat Winners Per State by the Average Contributions Given in that State 
- for States with Majority Republican Winners", subtitle= "According to the types of candidates that won")
+ for States with Majority Republican Winners", subtitle= "According to the types of candidates that won")+
+  scale_x_log10(breaks=5000)
 ```
 
 The scatterplot shows that as the number of average contributions increases in a state the higher number of challengers (from both parties) win in that state. Converserly we can see that the more incumbment wins, the less money spent in the state. We can also see that the more wins corresponds with incumbendents. The more money spent the more challengers that win. We saw the relationship between number of wins  and average contributions as the most important and interesting data takeaway, so we mapped it to position because people can most accurately tell position using perceptual hierarchy. The shape of each dot corresponds to whether or not the candidate was a challenger or an incumbent. we chose shape over color because it’s easier to perceive. Lastly, we used the color of each dot to represent party. 
