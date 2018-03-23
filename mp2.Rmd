@@ -198,6 +198,8 @@ winning_state_plotter(Republican_states)+
  for States with Majority Republican Winners", subtitle= "According to the types of candidates that won")+
   scale_x_log10(breaks=5000)
 ```
+####*In one sentence*
+In general, challengers need higher average contributions to win elections than incumbents do, while incumbents in states where their parties are the majority win more seats with lower average contributions.
 
 References: 
 http://www.cfinst.org/law.aspx
