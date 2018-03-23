@@ -208,3 +208,5 @@ The link to our GitHub repository is: https://github.com/emilyamorris/sds192-mp2
 ~some memes~
 
 ![](https://memegenerator.net/img/instances/300x300/25032842/got-rich-on-government-spending-wants-to-cut-government-spending.jpg)
+
+![](<iframe src="https://giphy.com/embed/1216HpvhbzganS" width="480" height="196" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/leonardo-dicaprio-money-1216HpvhbzganS">via GIPHY</a></p>)
